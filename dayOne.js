@@ -12,7 +12,7 @@ Consider your entire calibration document. What is the sum of all of the calibra
 */
 const fs  = require('fs');
 const readline = require('readline');
-let file = './dayOneB.txt';
+let file = './adventSecret.txt';
 let sum = 0;
 
 
@@ -27,10 +27,13 @@ rl.on('line', function(text) {
     console.log(sum);
 });
 
+console.log(sum);
+
 const returnNumbers = (line) => {
     let result = 0;
     let first = 0;
     let last = 0;
+    let streak = 0; //create a letter streak if streak is 3 or more than its able to a word
     
     for(let index = 0; index < line.length; index++){
         let character = parseInt(line[index]);
@@ -41,9 +44,22 @@ const returnNumbers = (line) => {
             else{
                 last = character;
             }
+
         }
+        else if(line.length - index >= 3){
+                let result = checkForWord(index, line);
+                if(result){
+                    if(first === 0){
+                        first = result;
+                    }
+                    else{
+                        last = result;
+                    }
+                }
+            }
+
     }
-    result = first *10;
+    result = first * 10;
     if(last === 0){
         return result + first;
     }
@@ -53,26 +69,80 @@ const returnNumbers = (line) => {
 }
 
 
-const makeArray = (line) => {
-    let result = 0;
-    let first = null;
-    let last = null;
-    for(let index = 0; index < line.length; index++){
-        if(!isNaN(line[index])){
-            if(first === null){
-                first = parseInt(line[index]);
+
+
+
+const checkForWord = (start, line) =>{
+    const char = line[start]
+    const wordNumbers = ['one','two','three','four','five','six','seven','eight','nine'];
+    let currentSet = '';
+    switch (char){
+        case 't':
+            for(let i = 0; i < wordNumbers[1].length; i++){
+                currentSet += line[start + i];
             }
-            else {
-                last = parseInt(line[index]);
+
+            if(currentSet === wordNumbers[1]){
+                return 2;
             }
-        }
+            currentSet += 'ee';
+            if(currentSet === wordNumbers[2]){
+                return 3;
+            }
+            break;
+        case 'o':
+            for(let i = 0; i < wordNumbers[0].length; i++){
+                currentSet += line[start + i];
+            }
+
+            if(currentSet === wordNumbers[0]){
+                return 1;
+            }
+            break;
+        case 'f':
+            for(let i = 0; i < wordNumbers[3].length; i++){
+                currentSet += line[start + i];
+            }
+
+            if(currentSet === wordNumbers[3]){
+                return 4;
+            }
+            if(currentSet === wordNumbers[4]){
+                return 5;
+            }
+            break;
+        case 's':
+            for(let i = 0; i < wordNumbers[5].length; i++){
+                currentSet += line[start + i];
+            }
+    
+            if(currentSet === wordNumbers[5]){
+                return 6;
+            }
+            currentSet += 'en';
+            if(currentSet === wordNumbers[6]){
+                return 7;
+            }
+            break;
+        case 'e':
+            for(let i = 0; i < wordNumbers[7].length; i++){
+                currentSet += line[start + i];
+            }
+        
+            if(currentSet === wordNumbers[7]){
+                return 8;
+            }
+            break;
+        case 'n':
+            for(let i = 0; i < wordNumbers[8].length; i++){
+                currentSet += line[start + i];
+            }
+            if(currentSet === wordNumbers[8]){
+                return 9;
+            }
+            break;   
+        default:
+            break;
+
     }
-    if(first === 0){
-        return last;
-    }
-    else {
-        result = (first * 10);
-        result = result + last;
-    }
-    return result;
 }
